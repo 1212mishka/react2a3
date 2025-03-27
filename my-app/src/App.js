@@ -1,58 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useState } from "react";
 
-function App() {
+const ReviewForm = () => {
+  const [reviewText, setReviewText] = useState(""); // Контролируемый компонент
+  const ratingRef = React.createRef(); // Неконтролируемый компонент
+  const [submittedReview, setSubmittedReview] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const ratingValue = ratingRef.current.value;
+    if (!reviewText.trim()) {
+      alert("Отзыв не может быть пустым!");
+      return;
+    }
+    setSubmittedReview({ text: reviewText, rating: ratingValue });
+    setReviewText("");
+    ratingRef.current.value = "1";
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div>
+      <h2>Форма для відгуків</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Текст відгуку:</label>
+          <textarea
+            value={reviewText}
+            onChange={(e) => setReviewText(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Оцінка:</label>
+          <select ref={ratingRef} defaultValue="1">
+            <option value="1">⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+          </select>
+        </div>
+        <button type="submit">Відправити</button>
+      </form>
+
+      {submittedReview && (
+        <div>
+          <h3>Ваш відгук:</h3>
+          <p>{submittedReview.text}</p>
+          <p>Оцінка: {submittedReview.rating} ⭐</p>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default App;
+export default ReviewForm;
